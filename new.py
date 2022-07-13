@@ -19,7 +19,7 @@ from scrape_utils import scrape_function_bsc, scrape_function_eth
 from pyrogram import Client
 
 
-from utils import checkBSC, checkETH
+# from utils import checkBSC, checkETH
 
 
 # My telegram api
