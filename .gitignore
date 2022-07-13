@@ -1,0 +1,6 @@
+env
+__*
+*.mp4
+*.jpg
+*.zip
+*.ipynb
