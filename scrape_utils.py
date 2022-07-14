@@ -9,7 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By  # for locating elements
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import \
-    expected_conditions as ec  # condition that wait for element
+    expected_conditions as EC  # condition that wait for element
 from selenium.webdriver.support.ui import \
     WebDriverWait  # for wait if condition is not fulfilled
 from selenium.webdriver.support.ui import Select
@@ -53,7 +53,7 @@ def scrape_function_bsc(token):
 
         url = f'https://bscscan.com/dextracker?q={token}&ps={total_rows}&p={page_no}'
         driver.get(url)
-
+        wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='card-body']//tbody//tr")))
         full_text_table = driver.find_elements(By.XPATH, "//div[@class='card-body']//tbody//tr")
 
         for i in full_text_table:
@@ -79,6 +79,8 @@ def scrape_function_bsc(token):
     if BIG_BUY:
         BIG_BUY = round(BIG_BUY, 2)
         driver.get('https://coinmarketcap.com/currencies/bnb/')
+        
+        wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="priceValue "]')))
         dollar_val = float(driver.find_element(By.XPATH, '//div[@class="priceValue "]').text[1:])
         in_dollar = round(dollar_val*BIG_BUY)
         return BIG_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar
@@ -96,15 +98,19 @@ def scrape_function_eth(token):
     url = f'https://etherscan.io/dex?q={token}#transactions'
     driver.get(url)
     driver.switch_to.default_content()
+    wait.until(EC.presence_of_element_located((By.XPATH, '//iframe')))
     a = driver.find_element(By.XPATH, "//iframe")
     driver.switch_to.frame(a)
 
+    wait.until(EC.presence_of_element_located((By.XPATH, '//select[@id="ddlRecordsPerPage"]')))
     select = Select(driver.find_element(By.XPATH, '//select[@id="ddlRecordsPerPage"]'))
 
     select.select_by_value('100')
     driver.switch_to.default_content()
+    wait.until(EC.presence_of_element_located((By.XPATH, '//iframe')))
     a = driver.find_element(By.XPATH, "//iframe")
     driver.switch_to.frame(a)
+    wait.until(EC.presence_of_element_located((By.XPATH, '//tbody//tr')))
     b = driver.find_elements(By.XPATH, '//tbody//tr')
     BIG_ROW, BIG_VAL = None, 0
     for i in b:
@@ -112,6 +118,7 @@ def scrape_function_eth(token):
             if int(i.text.split(' ')[1]) <= 30:
                     if BIG_VAL < float(i.text.replace(',','').split('$')[-1]):
                         BIG_ROW, BIG_VAL = i, float(i.text.replace(',','').split('$')[-1])
+
 
 
     BIG_BUY = BIG_ROW.find_element(By.XPATH, '//td[7]').text

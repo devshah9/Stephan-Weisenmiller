@@ -9,7 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By  # for locating elements
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import \
-    expected_conditions as ec  # condition that wait for element
+    expected_conditions as EC  # condition that wait for element
 from selenium.webdriver.support.ui import \
     WebDriverWait  # for wait if condition is not fulfilled
 from selenium.webdriver.support.ui import Select
@@ -21,37 +21,23 @@ userAgent = ua.random
 # print(userAgent)
 options.add_argument(f'user-agent={userAgent}')
 options.add_argument("--start-maximized")
-
-
-
-
-
-import os 
-
-
-# for heroku
-
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--no-sandbox")
-
-
+options.add_argument('--headless')
 
 def checkBSC(token):
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     driver.get(f'https://bscscan.com/dextracker?q={token}')
+    
+    myElem = wait.until(EC.presence_of_element_located((By.XPATH, '//table//td')))
+
     if driver.find_element(By.XPATH, '//table//td').text == 'No txn matching your filter.':
         return False
     else:
         return True
 
 def checkETH(token):
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     url = f'https://etherscan.io/token/{token}#tokenTrade'
