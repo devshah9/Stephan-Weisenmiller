@@ -38,7 +38,7 @@ def scrape_function_bsc(token):
         options.add_argument("--headless")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
-        driver = uc.Chrome(options=options)
+        driver = uc.Chrome(options=options, use_subprocess=True)
     else:
         driver = uc.Chrome(use_subprocess=True)
     wait = WebDriverWait(driver, 10)
@@ -96,7 +96,7 @@ def scrape_function_eth(token):
         options.add_argument("--headless")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
-        driver = uc.Chrome(options=options)
+        driver = uc.Chrome(options=options, use_subprocess=True)
     else:
         driver = uc.Chrome(use_subprocess=True)
     # creating waiting element
