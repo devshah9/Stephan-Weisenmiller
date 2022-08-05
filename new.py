@@ -1,19 +1,8 @@
-from tokenize import group
-from telethon import functions, types
 from telethon.tl.types import ChannelParticipantsAdmins
-from ast import pattern
-from collections import UserDict
-from shelve import DbfilenameShelf
-import time 
-from typing import Text
 from telethon import TelegramClient, events #,Button
 from telethon.tl.custom import Button
-from datetime import timedelta
-import logging
 import asyncio
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel
-from telethon.tl.types import InputPeerChannel
-from traitlets import Integer
 from scrape_utils import scrape_function_bsc, scrape_function_eth
 
 from pyrogram import Client
@@ -317,7 +306,7 @@ If not, type " /start " to reset everything.
 
 __Thank you for using @BuddhaBuyContestBot__
 ''')
-                    # await asyncio.sleep(120)
+                    await asyncio.sleep(120)
                     await find_big_buy(DB_DICT[user_id])
 
 
@@ -385,7 +374,7 @@ Timer Reset - The timer will reset every time a new big buy is found.''', button
         
 async def find_big_buy(final_dict):
     print(final_dict)
-    OLD_BUY = 0
+    OLD_BUY, in_dollar_old, not_new_buyed_min = 0, 0, 0 
     inital_time = int(final_dict['Time'])
 
     if final_dict['Mode'] == "Straight time":
@@ -422,11 +411,13 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
                     scrape_info = scrape_function_bsc(final_dict['Token address'])
                 elif final_dict['Blockchain'] == "ETH":
                     scrape_info = scrape_function_eth(final_dict['Token address'])
+                print('scrape info', scrape_info)
                 if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar = scrape_info
+                    NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar_new = scrape_info
+                    print(78, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
                     if OLD_BUY < NEW_BUY:
-                        print(78, NEW_BUY)
-                        OLD_BUY = NEW_BUY
+                        not_new_buyed_min = 0
+                        OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
                         msg = """
 **{} Biggest Buy Contest Tracker**
 
@@ -438,23 +429,26 @@ New Biggest Buy:
 **Contest Time Remaining:** __{} Minutes Left__
 **Prize:** __{}__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
                     
                     else:
-                        msg = """
-**{} Biggest Buy Contest Tracker**
+                        not_new_buyed_min += 1
+#                         msg = """
+# **{} Biggest Buy Contest Tracker**
 
-__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+# __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
-Current Biggest Buy: 
-**Amount Spent:** __{} BNB__ (${})
-**Tx Hash:** [{}...{}]({})
-**Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
+# Current Biggest Buy: 
+# **Amount Spent:** __{} BNB__ (${})
+# **Tx Hash:** [{}...{}]({})
+# **Contest Time Remaining:** {} Minutes Left
+# **Prize:**: {}
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
-                    await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+# __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+#                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                 else:
+                    not_new_buyed_min +=1
+                if not_new_buyed_min == 5:
                     msg = """
 **{} Biggest Buy Contest Tracker**
 
@@ -464,10 +458,10 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 **Prize:**: {}
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
-                await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-
-                await asyncio.sleep(60)
-                final_dict['Time'] = int(final_dict['Time']) - 5
+                    await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                
+                await asyncio.sleep(55)
+                final_dict['Time'] = int(final_dict['Time']) - 1
             else:
                 msg = """
 **{} Biggest Buy Contest Tracker**
@@ -482,7 +476,7 @@ Winner:
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break
@@ -494,8 +488,10 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
                 elif final_dict['Blockchain'] == "ETH":
                     scrape_info = scrape_function_eth(final_dict['Token address'])
                 if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, in_dollar = scrape_info
+                    NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar_new = scrape_info
+                    print(498, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
                     if OLD_BUY < NEW_BUY:
+                        not_new_buyed_min = 0
                         print(95, NEW_BUY)
                         final_dict['Time'] = inital_time
                         msg = """  
@@ -509,27 +505,16 @@ New Biggest Buy:
 **Contest Time Remaining:** {} Minutes Left
 **Prize:** {}
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_new, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
                         await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-                        OLD_BUY = NEW_BUY
+                        OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
                     else :
-                        final_dict['Time'] = int(final_dict['Time']) - 5
-                        msg = """
-**{} Biggest Buy Contest Tracker**
-
-__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
-
-Current Biggest Buy: 
-**Amount Spent:** __{} BNB__ (${})
-**Tx Hash:** [{}...{}]({})
-**Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
-
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
-                        await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                        final_dict['Time'] = int(final_dict['Time']) - 1
+                        not_new_buyed_min += 1
                 else:
-                    final_dict['Time'] = int(final_dict['Time']) - 5
-
+                    final_dict['Time'] = int(final_dict['Time']) - 1
+                    not_new_buyed_min += 1
+                if not_new_buyed_min ==5:
                     msg = """
 **{} Biggest Buy Contest Tracker**
 
@@ -539,9 +524,9 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 **Prize:**: {}
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
-                await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                    await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
-                await asyncio.sleep(60)
+                await asyncio.sleep(55)
             else:
                 msg = """
 **{} Biggest Buy Contest Tracker**
@@ -556,7 +541,7 @@ Winner:
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break

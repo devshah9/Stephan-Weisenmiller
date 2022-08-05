@@ -15,34 +15,32 @@ from selenium.webdriver.support.ui import \
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-options = Options()
-ua = UserAgent()
-userAgent = ua.random
-# print(userAgent)
-options.add_argument(f'user-agent={userAgent}')
-options.add_argument("--start-maximized")
 
-
-
-
-import os 
+import undetected_chromedriver as uc
+from sys import platform
+import os
 
 
 # for heroku
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--no-sandbox")
+options = uc.ChromeOptions()
+options.add_argument("--headless")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--no-sandbox")
 
+                                                                                                   
 
-
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
 def scrape_function_bsc(token):
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-    # creating waiting element
+
+    if platform != 'win32':
+        options = uc.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox") 
+        driver = uc.Chrome(options=options)
+    else:
+        driver = uc.Chrome(use_subprocess=True)
     wait = WebDriverWait(driver, 10)
     page_no = 1
     running = True
@@ -83,16 +81,24 @@ def scrape_function_bsc(token):
         wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="priceValue "]')))
         dollar_val = float(driver.find_element(By.XPATH, '//div[@class="priceValue "]').text[1:])
         in_dollar = round(dollar_val*BIG_BUY)
+        driver.quit()
         return BIG_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar
     else:
+        driver.quit()
         return None
                 
 # print(scrape_function_bsc('0x2170ed0880ac9a755fd29b2688956bd959f933f8'))
 # print(scrape_function_eth('0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE'))
 
 def scrape_function_eth(token):
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    if platform != 'win32':
+        options = uc.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox") 
+        driver = uc.Chrome(options=options)
+    else:
+        driver = uc.Chrome(use_subprocess=True)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     url = f'https://etherscan.io/dex?q={token}#transactions'
@@ -107,22 +113,34 @@ def scrape_function_eth(token):
 
     select.select_by_value('100')
     driver.switch_to.default_content()
-    wait.until(EC.presence_of_element_located((By.XPATH, '//iframe')))
-    a = driver.find_element(By.XPATH, "//iframe")
-    driver.switch_to.frame(a)
-    wait.until(EC.presence_of_element_located((By.XPATH, '//tbody//tr')))
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, '//iframe')))
+    wait.until(EC.visibility_of_element_located((By.XPATH, '//tbody//tr')))
+    # wait.until(EC.presence_of_element_located((By.XPATH, '//iframe')))
+    
+    # a = driver.find_element(By.XPATH, "//iframe")
+    #driver.switch_to.frame(a)
+    
     b = driver.find_elements(By.XPATH, '//tbody//tr')
+    #html = b.text
+    #print(html)
     BIG_ROW, BIG_VAL = None, 0
     for i in b:
         if ("Buy" in i.text) and ('hr' not in i.text) and ('day' not in i.text):
             if int(i.text.split(' ')[1]) <= 30:
-                    if BIG_VAL < float(i.text.replace(',','').split('$')[-1]):
-                        BIG_ROW, BIG_VAL = i, float(i.text.replace(',','').split('$')[-1])
+                if BIG_VAL < float(i.text.replace(',','').split('$')[-1]):
+                    BIG_ROW, BIG_VAL = i, float(i.text.replace(',','').split('$')[-1])
 
 
-
-    BIG_BUY = BIG_ROW.find_element(By.XPATH, '//td[7]').text
-    TRX_HASH =  BIG_ROW.find_element(By.XPATH, '//td[2]').text
-    TRX_HASH_LINK = BIG_ROW.find_element(By.XPATH, '//td[2]//a').get_attribute('href')
-    in_dollar = BIG_VAL
-    return BIG_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar
+    if BIG_ROW:
+        print('BIG_BUY', BIG_ROW)
+        BIG_BUY = float(str(BIG_ROW.find_element(By.XPATH, '//td[7]').text).split(' ')[0].replace(',', ''))
+        TRX_HASH =  BIG_ROW.find_element(By.XPATH, '//td[2]').text
+        TRX_HASH_LINK = BIG_ROW.find_element(By.XPATH, '//td[2]//a').get_attribute('href')
+        in_dollar = BIG_VAL
+        driver.quit()
+        return BIG_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar
+    else:
+        driver.quit()
+        return None
+print(scrape_function_eth('0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE'))
+ 
