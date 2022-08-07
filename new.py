@@ -451,7 +451,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
 #                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                 else:
                     not_new_buyed_min +=1
-                if not_new_buyed_min == 5:
+                if not_new_buyed_min ==5 and final_dict['Time']!= 0:
                     msg = """
 **{} Biggest Buy Contest Tracker**
 
@@ -463,7 +463,7 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                 
-                await asyncio.sleep(55)
+                await asyncio.sleep(35)
                 final_dict['Time'] = int(final_dict['Time']) - 1
             else:
                 msg = """
@@ -517,7 +517,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
                 else:
                     final_dict['Time'] = int(final_dict['Time']) - 1
                     not_new_buyed_min += 1
-                if not_new_buyed_min ==5:
+                if not_new_buyed_min ==5 and final_dict['Time']!= 0:
                     msg = """
 **{} Biggest Buy Contest Tracker**
 
@@ -529,7 +529,7 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                     not_new_buyed_min = 0
-                await asyncio.sleep(55)
+                await asyncio.sleep(35)
             else:
                 # Add the logic that dont throw error if there is no new buy 
                 #  Rn it showing error because of newbuy
