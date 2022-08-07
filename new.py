@@ -414,7 +414,6 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
                     scrape_info = scrape_function_bsc(final_dict['Token address'])
                 elif final_dict['Blockchain'] == "ETH":
                     scrape_info = scrape_function_eth(final_dict['Token address'])
-                print('scrape info', scrape_info)
                 if scrape_info is not None:
                     NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar_new = scrape_info
                     print(78, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
@@ -436,19 +435,6 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
                     
                     else:
                         not_new_buyed_min += 1
-#                         msg = """
-# **{} Biggest Buy Contest Tracker**
-
-# __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
-
-# Current Biggest Buy: 
-# **Amount Spent:** __{} BNB__ (${})
-# **Tx Hash:** [{}...{}]({})
-# **Contest Time Remaining:** {} Minutes Left
-# **Prize:**: {}
-
-# __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
-#                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                 else:
                     not_new_buyed_min +=1
                 if not_new_buyed_min ==5 and final_dict['Time']!= 0:
@@ -462,7 +448,7 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-                
+                not_new_buyed_min = 0
                 await asyncio.sleep(35)
                 final_dict['Time'] = int(final_dict['Time']) - 1
             else:
@@ -495,7 +481,6 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
                     print(498, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
                     if OLD_BUY < NEW_BUY:
                         not_new_buyed_min = 0
-                        print(95, NEW_BUY)
                         final_dict['Time'] = inital_time
                         msg = """  
 **{} Biggest Buy Contest Tracker**
