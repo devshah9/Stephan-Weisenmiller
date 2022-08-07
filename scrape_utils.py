@@ -134,7 +134,7 @@ def scrape_function_eth(token):
 
 
     if BIG_ROW:
-        print('BIG_BUY', BIG_ROW)
+        # print('BIG_BUY', BIG_ROW)
         BIG_BUY = float(str(BIG_ROW.find_element(By.XPATH, '//td[7]').text).split(' ')[0].replace(',', ''))
         TRX_HASH =  BIG_ROW.find_element(By.XPATH, '//td[2]').text
         TRX_HASH_LINK = BIG_ROW.find_element(By.XPATH, '//td[2]//a').get_attribute('href')
