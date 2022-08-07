@@ -144,5 +144,5 @@ def scrape_function_eth(token):
     else:
         driver.quit()
         return None
-print(scrape_function_eth('0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE'))
+# print(scrape_function_eth('0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE'))
  

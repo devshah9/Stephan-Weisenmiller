@@ -2,6 +2,7 @@ from telethon.tl.types import ChannelParticipantsAdmins
 from telethon import TelegramClient, events #,Button
 from telethon.tl.custom import Button
 import asyncio
+import datetime
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel
 from scrape_utils import scrape_function_bsc, scrape_function_eth
 
@@ -404,6 +405,8 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
     await asyncio.sleep(60)
     while True:
+        now = datetime.datetime.now()
+        print('This is the current time', now.time())
         if final_dict['Mode'] == "Straight time":
             print(int(final_dict['Time']),' min left')
             if int(final_dict['Time']) > 0:
@@ -481,7 +484,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
 
                 break
         if final_dict["Mode"] == "Reset time":
-            print(int(final_dict['Time']))
+            print(int(final_dict['Time']), not_new_buyed_min)
             if int(final_dict['Time']) > 0:
                 if final_dict['Blockchain'] == "BSC":
                     scrape_info = scrape_function_bsc(final_dict['Token address'])
@@ -525,9 +528,12 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-
+                    not_new_buyed_min = 0
                 await asyncio.sleep(55)
             else:
+                # Add the logic that dont throw error if there is no new buy 
+                #  Rn it showing error because of newbuy
+
                 msg = """
 **{} Biggest Buy Contest Tracker**
 
