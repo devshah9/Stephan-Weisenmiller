@@ -1,3 +1,4 @@
+from pickle import NONE
 from telethon.tl.types import ChannelParticipantsAdmins
 from telethon import TelegramClient, events #,Button
 from telethon.tl.custom import Button
@@ -375,7 +376,8 @@ Timer Reset - The timer will reset every time a new big buy is found.''', button
         
 async def find_big_buy(final_dict):
     print(final_dict)
-    OLD_BUY, in_dollar_old, not_new_buyed_min = 0, 0, 0 
+    OLD_BUY, in_dollar_old, not_new_buyed_min = 0, 0, 0
+    UNIT = None
     inital_time = int(final_dict['Time'])
 
     if final_dict['Mode'] == "Straight time":
@@ -412,26 +414,28 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
             if int(final_dict['Time']) > 0:
                 if final_dict['Blockchain'] == "BSC":
                     scrape_info = scrape_function_bsc(final_dict['Token address'])
+                    UNIT = 'BNB'
                 elif final_dict['Blockchain'] == "ETH":
+                    UNIT = 'ETH'
                     scrape_info = scrape_function_eth(final_dict['Token address'])
                 if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar_new = scrape_info
+                    NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
                     print(78, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
                     if OLD_BUY < NEW_BUY:
                         not_new_buyed_min = 0
-                        OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
+                        OLD_BUY, in_dollar_old, OLD_TRX_HASH_LINK = NEW_BUY, in_dollar_new, NEW_TRX_HASH_LINK
                         msg = """
 **{} Biggest Buy Contest Tracker**
 
 `💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
 
 New Biggest Buy:
-**Amount Spent:** __{} BNB__ (${})
+**Amount Spent:** __{} {}__ (${})
 **TX Hash:** [{}..{}]({})
 **Contest Time Remaining:** __{} Minutes Left__
 **Prize:** __{}__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, TRX_HASH[0:3], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
                     
                     else:
                         not_new_buyed_min += 1
@@ -458,14 +462,14 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 __ 🎉 Contest Winner!! 🎉__
 
 Winner:
-**Amount Spent:** __{} BNB__ (${}) 
+**Amount Spent:** __{} {}__ (${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:**: __{}__
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break
@@ -473,13 +477,16 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
             print(int(final_dict['Time']), not_new_buyed_min)
             if int(final_dict['Time']) > 0:
                 if final_dict['Blockchain'] == "BSC":
+                    UNIT = 'BNB'
                     scrape_info = scrape_function_bsc(final_dict['Token address'])
                 elif final_dict['Blockchain'] == "ETH":
+                    UNIT = 'ETH'
                     scrape_info = scrape_function_eth(final_dict['Token address'])
                 if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar_new = scrape_info
+                    NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
                     print(498, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
                     if OLD_BUY < NEW_BUY:
+                        OLD_TRX_HASH_LINK = NEW_TRX_HASH_LINK
                         not_new_buyed_min = 0
                         final_dict['Time'] = inital_time
                         msg = """  
@@ -488,12 +495,12 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_d
 __💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥__
 
 New Biggest Buy: 
-**Amount Spent:** {} BNB (${})
+**Amount Spent:** {} {} (${})
 **TX Hash:** [{}..{}]({})
 **Contest Time Remaining:** {} Minutes Left
 **Prize:** {}
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_new, TRX_HASH[0:3], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_new, TRX_HASH[0:3], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
                         await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                         OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
                     else :
@@ -525,14 +532,14 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 __ 🎉 Contest Winner!! 🎉__
 
 Winner: 
-**Amount Spent:** __{} BNB__ (${})
+**Amount Spent:** __{} {}__ (${})
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:**: __{}__
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break
