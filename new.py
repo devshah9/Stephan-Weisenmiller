@@ -469,7 +469,7 @@ Winner:
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break
@@ -539,7 +539,7 @@ Winner:
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, TRX_HASH[0:4], TRX_HASH[-3:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
                 break
