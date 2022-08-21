@@ -128,16 +128,16 @@ def scrape_function_eth(token):
     BIG_ROW, BIG_VAL = None, 0
     for i in b:
         if ("Buy" in i.text) and ('hr' not in i.text) and ('day' not in i.text):
-            if int(i.text.split(' ')[1]) <= 30:
+            if int(i.text.split(' ')[1]) <= 3:  
                 if BIG_VAL < float(i.text.replace(',','').split('$')[-1]):
                     BIG_ROW, BIG_VAL = i, float(i.text.replace(',','').split('$')[-1])
 
 
     if BIG_ROW:
-        # print('BIG_BUY', BIG_ROW)
-        BIG_BUY = round(float(str(BIG_ROW.find_element(By.XPATH, '//td[7]').text).split(' ')[0].replace(',', '')) , 2)
         TRX_HASH =  BIG_ROW.find_element(By.XPATH, '//td[2]').text
         TRX_HASH_LINK = BIG_ROW.find_element(By.XPATH, '//td[2]//a').get_attribute('href')
+        driver.get(url)
+        BIG_BUY = round(BIG_VAL / float(str(driver.find_element(By.CLASS_NAME, 'text-dark').text).split('$')[-1].replace(',', '')), 2)
         in_dollar = BIG_VAL
         driver.quit()
         return BIG_BUY, TRX_HASH, TRX_HASH_LINK, in_dollar
