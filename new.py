@@ -231,6 +231,12 @@ Timer Reset - The timer will reset every time a new big buy is found.
                     await client1.send_message(user_id, '''
 Here are examples of how the posts will look in chat 👇👇
 ''')
+                    if DB_DICT[user_id]['Blockchain'] == 'BSC':
+                        UNIT = 'BNB'
+                        URL_LINK = 'https://bscscan.com/'
+                    if DB_DICT[user_id]['Blockchain'] == 'ETH':
+                        UNIT = 'ETH'
+                        URL_LINK = 'https://etherscan.io/'
                     if DB_DICT[user_id]['Mode'] == 'Straight time':
                         msg = """
 **{} Biggest Buy Contest Tracker**
@@ -250,12 +256,12 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], DB_DICT
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 Current Biggest Buy: 
-**Amount Spent:** __20 BNB__ ($561.65) 
-**Tx Hash:** [0X865...654163](https://bscscan.com/)
+**Amount Spent:** __20 {}__ ($561.65) 
+**Tx Hash:** [0X865...654163]({})
 **Contest Time Remaining:** 30 Minutes Left
 **Prize:**: {}
 
-__Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], DB_DICT[user_id]['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], UNIT, URL_LINK, DB_DICT[user_id]['Prize'])
                         await send_mess(user_id, msg, DB_DICT[user_id]['path'])
 
                     elif DB_DICT[user_id]['Mode'] == 'Reset time':
@@ -277,12 +283,12 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], DB_DICT
 `💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
 
 New Biggest Buy:
-**Amount Spent:** __20 BNB__ ($456.54)
-**TX Hash:** [0x465..54511](https://bscscan.com/)
+**Amount Spent:** __20 {}__ ($456.54)
+**TX Hash:** [0x465..54511]({})
 **Contest Time Remaining:** __30 Minutes Left__
 **Prize:** __{}__
 
-__Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'],  DB_DICT[user_id]['Prize'])
+__Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], UNIT, URL_LINK, DB_DICT[user_id]['Prize'])
                         await send_mess(user_id, msg, DB_DICT[user_id]['path'])
                     msg = '''
 
@@ -291,14 +297,14 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'],  DB_DIC
 __ 🎉 Contest Winner!! 🎉__
 
 Winner: 
-**Amount Spent:** __20 BNB__ ($54.56)
-**Tx Hash:** [0x5461...4561](https://bscscan.com/)
+**Amount Spent:** __20 {}__ ($54.56)
+**Tx Hash:** [0x5461...4561]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:**: __{}__
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__'''.format(DB_DICT[user_id]['Token'],  DB_DICT[user_id]['Prize'])
+__Bot powered by @BuddhaCoinCares__'''.format(DB_DICT[user_id]['Token'], UNIT, URL_LINK, DB_DICT[user_id]['Prize'])
                     await send_mess(user_id, msg, DB_DICT[user_id]['path'])
 
                     await client1.send_message(user_id, f'''
