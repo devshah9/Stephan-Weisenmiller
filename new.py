@@ -13,22 +13,24 @@ from utils import checkBSC, checkETH
 
 
 # My telegram api
-api_id = 1479963
-api_hash = '5181c1dd5f7492e61197f02b6dc4b276'
+api_id = 16407758
+api_hash = '973a52a058356cd9fc8879a142bbd53d'
 
 
-token = '5533082287:AAGnJTdevs7i1SgnWG9JfnyRAZqm4Pfutzk'
+token = '5781829484:AAE_S1ROChx2pQK5cnX8MwPEFb9O9-I43LM'
 
-client1 = TelegramClient("bot1", api_id, api_hash).start(bot_token=token)
-app = Client("my_account", api_id=api_id, api_hash=api_hash)
+client1 = TelegramClient("capo", api_id, api_hash).start(bot_token=token)
+app = Client("capo1", api_id=api_id, api_hash=api_hash, bot_token=token)
 
 my_id = None
 def main():
 
     client1.start()
     client1.parse_mode = 'md'
+    app.start()
     print("Userbot on!")
     client1.run_until_disconnected()
+    app.disconnect()
 
 # [emoji](https://c.tenor.com/UTDOJkmcvSkAAAAj/bitcoin-crypto.gif)
 
@@ -52,12 +54,13 @@ async def user_add1(event):
                 if user.id == user_id:
                     admin = True       
         else:
-            await app.start()
             chat_id = event.original_update.message.peer_id.chat_id
-            administrators = await app.get_chat_member(-chat_id, user_id)
-            await app.stop()
-            if str(administrators.status) == "ChatMemberStatus.OWNER" or str(administrators.status) == "ChatMemberStatus.ADMINISTRATORS": 
-                admin = True       
+            try:
+                administrators = await app.get_chat_member(-chat_id, user_id)
+                if str(administrators.status) == "ChatMemberStatus.OWNER" or str(administrators.status) == "ChatMemberStatus.ADMINISTRATORS": 
+                    admin = True       
+            except Exception as e :
+                print(e)
         if admin:
             print(52, user_id)
             DB_DICT[user_id] = {}
@@ -67,7 +70,7 @@ async def user_add1(event):
             await client1.send_message(chat_entity.id, f'''
 Thank you for using BuddhaBuyContestBot! 
 
-To activate your contest, an admin must click this link & chat with the bot here >>[@BuddhaBuyContestBot](http://t.me/dev6546541245bot?start=captcha)
+To activate your contest, an admin must click this link & chat with the bot here >>[@BuddhaBuyContestBot](https://t.me/BuddhaBuyContestBot?start=captcha)
 ''', )
 
 @client1.on(events.NewMessage(pattern='/start'))
@@ -122,6 +125,13 @@ async def user_add1(event):
         a = await client1.get_entity(event.original_update.message.peer_id)
         if a.username == 'Devshah9' or a.username == 'CapoTheDev':
             del DB_DICT['Adv']
+
+@client1.on(events.NewMessage(pattern='/remove_link'))
+async def user_add1(event):
+    global DB_DICT
+    if type(event.original_update.message.peer_id) == PeerUser:
+        a = await client1.get_entity(event.original_update.message.peer_id)
+        if a.username == 'Devshah9' or a.username == 'CapoTheDev':
             if 'Adv_path' in DB_DICT:
                 del DB_DICT['Adv_path']
 
