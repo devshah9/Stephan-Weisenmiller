@@ -37,7 +37,7 @@ def main():
 
 DB_DICT = {}
 
-@client1.on(events.NewMessage(pattern='/activate@dev'))
+@client1.on(events.NewMessage(pattern='/activate@buddha'))
 # @client1.on(events.NewMessage())
 async def user_add1(event):
     if type(event.original_update.message.peer_id) != PeerUser:
