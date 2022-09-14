@@ -164,6 +164,7 @@ async def user_add1(event):
     if type(event.original_update.message.peer_id) == PeerUser:
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
+            DB_DICT[user_id] = {}
             if DB_DICT[user_id]['Stage'] == 3 and '/add_adv' not in event.original_update.message.message :
                 print(144, event.original_update)
                 if event.original_update.message.photo:
@@ -325,7 +326,8 @@ If not, type " /start " to reset everything.
 __Thank you for using @BuddhaBuyContestBot__
 ''')
                     await asyncio.sleep(120)
-                    await find_big_buy(DB_DICT[user_id])
+                    if DB_DICT[user_id]['Stage'] == 6:
+                        await find_big_buy(DB_DICT[user_id])
 
 
 
