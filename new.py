@@ -73,12 +73,22 @@ Thank you for using BuddhaBuyContestBot!
 To activate your contest, an admin must click this link & chat with the bot here >>[@BuddhaBuyContestBot](https://t.me/BuddhaBuyContestBot?start=captcha)
 ''', )
 
+
+@client1.on(events.NewMessage(pattern='/cancel'))
+async def user_add1(event):
+    global DB_DICT
+    user_id = event.original_update.message.peer_id.user_id
+    if user_id in DB_DICT:
+        DB_DICT[user_id] = {}
+
+
 @client1.on(events.NewMessage(pattern='/start'))
 async def user_add1(event):
     global DB_DICT
     if type(event.original_update.message.peer_id) == PeerUser:# 
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
+            DB_DICT[user_id] = {}
             keyboard = [
                 [Button.inline("BSC", b"21")],
                 [Button.inline("ETH", b"22")]
@@ -164,7 +174,7 @@ async def user_add1(event):
     if type(event.original_update.message.peer_id) == PeerUser:
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
-            DB_DICT[user_id] = {}
+
             if DB_DICT[user_id]['Stage'] == 3 and '/add_adv' not in event.original_update.message.message :
                 print(144, event.original_update)
                 if event.original_update.message.photo:
@@ -393,6 +403,7 @@ Timer Reset - The timer will reset every time a new big buy is found.''', button
 
         
 async def find_big_buy(final_dict):
+    global DB_DICT
     print(final_dict)
     OLD_BUY, in_dollar_old, not_new_buyed_min = 0, 0, 0
     UNIT = None
@@ -425,143 +436,144 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
     await asyncio.sleep(60)
     while True:
-        now = datetime.datetime.now()
-        print('This is the current time', now.time())
-        if final_dict['Mode'] == "Straight time":
-            print(int(final_dict['Time']),' min left')
-            if int(final_dict['Time']) > 0:
-                if final_dict['Blockchain'] == "BSC":
-                    scrape_info = scrape_function_bsc(final_dict['Token address'])
-                    UNIT = 'BNB'
-                elif final_dict['Blockchain'] == "ETH":
-                    UNIT = 'ETH'
-                    scrape_info = scrape_function_eth(final_dict['Token address'])
-                if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
-                    print(78, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
-                    if OLD_BUY < NEW_BUY:
-                        not_new_buyed_min = 0
-                        OLD_BUY, in_dollar_old, OLD_TRX_HASH_LINK = NEW_BUY, in_dollar_new, NEW_TRX_HASH_LINK
-                        msg = """
-**{} Biggest Buy Contest Tracker**
+        if final_dict in DB_DICT:
+            now = datetime.datetime.now()
+            print('This is the current time', now.time())
+            if final_dict['Mode'] == "Straight time":
+                print(int(final_dict['Time']),' min left')
+                if int(final_dict['Time']) > 0:
+                    if final_dict['Blockchain'] == "BSC":
+                        scrape_info = scrape_function_bsc(final_dict['Token address'])
+                        UNIT = 'BNB'
+                    elif final_dict['Blockchain'] == "ETH":
+                        UNIT = 'ETH'
+                        scrape_info = scrape_function_eth(final_dict['Token address'])
+                    if scrape_info is not None:
+                        NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
+                        print(78, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
+                        if OLD_BUY < NEW_BUY:
+                            not_new_buyed_min = 0
+                            OLD_BUY, in_dollar_old, OLD_TRX_HASH_LINK = NEW_BUY, in_dollar_new, NEW_TRX_HASH_LINK
+                            msg = """
+    **{} Biggest Buy Contest Tracker**
 
-`💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
+    `💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
 
-New Biggest Buy:
-**Amount Spent:** __{} {}__ (${})
-**TX Hash:** [{}..{}]({})
-**Contest Time Remaining:** __{} Minutes Left__
-**Prize:** __{}__
+    New Biggest Buy:
+    **Amount Spent:** __{} {}__ (${})
+    **TX Hash:** [{}..{}]({})
+    **Contest Time Remaining:** __{} Minutes Left__
+    **Prize:** __{}__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
-                        await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK,  final_dict['Time'],final_dict['Prize'])
+                            await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                        else:
+                            not_new_buyed_min += 1
                     else:
-                        not_new_buyed_min += 1
-                else:
-                    not_new_buyed_min +=1
-                if not_new_buyed_min ==5 and final_dict['Time']!= 0:
-                    msg = """
-**{} Biggest Buy Contest Tracker**
+                        not_new_buyed_min +=1
+                    if not_new_buyed_min ==5 and final_dict['Time']!= 0:
+                        msg = """
+    **{} Biggest Buy Contest Tracker**
 
-__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+    __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
-**Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
+    **Contest Time Remaining:** {} Minutes Left
+    **Prize:**: {}
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
-                    await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-                    not_new_buyed_min = 0
-                await asyncio.sleep(33)
-                final_dict['Time'] = int(final_dict['Time']) - 1
-            else:
-                msg = """
-**{} Biggest Buy Contest Tracker**
-
-__ 🎉 Contest Winner!! 🎉__
-
-Winner:
-**Amount Spent:** __{} {}__ (${}) 
-**Tx Hash:** [{}...{}]({})
-**Contest Time Remaining:** __0 Minutes Left__
-**Prize:**: __{}__
-
-__Contact your project’s owner for payout details.__
-
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
-                await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-
-                break
-        if final_dict["Mode"] == "Reset time":
-            print(int(final_dict['Time']), not_new_buyed_min)
-            if int(final_dict['Time']) > 0:
-                if final_dict['Blockchain'] == "BSC":
-                    UNIT = 'BNB'
-                    scrape_info = scrape_function_bsc(final_dict['Token address'])
-                elif final_dict['Blockchain'] == "ETH":
-                    UNIT = 'ETH'
-                    scrape_info = scrape_function_eth(final_dict['Token address'])
-                if scrape_info is not None:
-                    NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
-                    print(498, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
-                    if OLD_BUY < NEW_BUY:
-                        OLD_TRX_HASH_LINK = NEW_TRX_HASH_LINK
-                        not_new_buyed_min = 0
-                        final_dict['Time'] = inital_time
-                        msg = """  
-**{} Biggest Buy Contest Tracker**
-
-__💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥__
-
-New Biggest Buy: 
-**Amount Spent:** {} {} (${})
-**TX Hash:** [{}..{}]({})
-**Contest Time Remaining:** {} Minutes Left
-**Prize:** {}
-
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_new, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                         await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-                        OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
-                    else :
+                        not_new_buyed_min = 0
+                    await asyncio.sleep(33)
+                    final_dict['Time'] = int(final_dict['Time']) - 1
+                else:
+                    msg = """
+    **{} Biggest Buy Contest Tracker**
+
+    __ 🎉 Contest Winner!! 🎉__
+
+    Winner:
+    **Amount Spent:** __{} {}__ (${}) 
+    **Tx Hash:** [{}...{}]({})
+    **Contest Time Remaining:** __0 Minutes Left__
+    **Prize:**: __{}__
+
+    __Contact your project’s owner for payout details.__
+
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
+                    await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+
+                    break
+            if final_dict["Mode"] == "Reset time":
+                print(int(final_dict['Time']), not_new_buyed_min)
+                if int(final_dict['Time']) > 0:
+                    if final_dict['Blockchain'] == "BSC":
+                        UNIT = 'BNB'
+                        scrape_info = scrape_function_bsc(final_dict['Token address'])
+                    elif final_dict['Blockchain'] == "ETH":
+                        UNIT = 'ETH'
+                        scrape_info = scrape_function_eth(final_dict['Token address'])
+                    if scrape_info is not None:
+                        NEW_BUY, TRX_HASH, NEW_TRX_HASH_LINK, in_dollar_new = scrape_info
+                        print(498, NEW_BUY, OLD_BUY, OLD_BUY < NEW_BUY)
+                        if OLD_BUY < NEW_BUY:
+                            OLD_TRX_HASH_LINK = NEW_TRX_HASH_LINK
+                            not_new_buyed_min = 0
+                            final_dict['Time'] = inital_time
+                            msg = """  
+    **{} Biggest Buy Contest Tracker**
+
+    __💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥__
+
+    New Biggest Buy: 
+    **Amount Spent:** {} {} (${})
+    **TX Hash:** [{}..{}]({})
+    **Contest Time Remaining:** {} Minutes Left
+    **Prize:** {}
+
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT, in_dollar_new, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+                            await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                            OLD_BUY, in_dollar_old = NEW_BUY, in_dollar_new
+                        else :
+                            final_dict['Time'] = int(final_dict['Time']) - 1
+                            not_new_buyed_min += 1
+                    else:
                         final_dict['Time'] = int(final_dict['Time']) - 1
                         not_new_buyed_min += 1
+                    if not_new_buyed_min ==5 and final_dict['Time']!= 0:
+                        msg = """
+    **{} Biggest Buy Contest Tracker**
+
+    __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+
+    **Contest Time Remaining:** {} Minutes Left
+    **Prize:**: {}
+
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
+                        await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
+                        not_new_buyed_min = 0
+                    await asyncio.sleep(33)
                 else:
-                    final_dict['Time'] = int(final_dict['Time']) - 1
-                    not_new_buyed_min += 1
-                if not_new_buyed_min ==5 and final_dict['Time']!= 0:
+                    # Add the logic that dont throw error if there is no new buy 
+                    #  Rn it showing error because of newbuy
+
                     msg = """
-**{} Biggest Buy Contest Tracker**
+    **{} Biggest Buy Contest Tracker**
 
-__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+    __ 🎉 Contest Winner!! 🎉__
 
-**Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
+    Winner: 
+    **Amount Spent:** __{} {}__ (${})
+    **Tx Hash:** [{}...{}]({})
+    **Contest Time Remaining:** __0 Minutes Left__
+    **Prize:**: __{}__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
+    __Contact your project’s owner for payout details.__
+
+    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-                    not_new_buyed_min = 0
-                await asyncio.sleep(33)
-            else:
-                # Add the logic that dont throw error if there is no new buy 
-                #  Rn it showing error because of newbuy
 
-                msg = """
-**{} Biggest Buy Contest Tracker**
-
-__ 🎉 Contest Winner!! 🎉__
-
-Winner: 
-**Amount Spent:** __{} {}__ (${})
-**Tx Hash:** [{}...{}]({})
-**Contest Time Remaining:** __0 Minutes Left__
-**Prize:**: __{}__
-
-__Contact your project’s owner for payout details.__
-
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
-                await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
-
-                break
-                
+                    break
+                    
 
     final_dict = None
     print('done')
