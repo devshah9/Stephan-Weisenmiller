@@ -86,17 +86,18 @@ async def user_add1(event):
 @client1.on(events.NewMessage(pattern='/start'))
 async def user_add1(event):
     global DB_DICT
-    print(event)
     if type(event.original_update.message.peer_id) == PeerUser:# 
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
-            DB_DICT[user_id] = {}
+            if DB_DICT[user_id]['Stage'] != 1: 
+                DB_DICT[user_id] = {}
             keyboard = [
                 [Button.inline("BSC", b"21")],
                 [Button.inline("ETH", b"22")]
             ]
             await client1.send_message(user_id, f'What blockchain does your token use?', buttons=keyboard)            
             DB_DICT[user_id]['Stage'] = 2
+            print(101, DB_DICT)
         else:
             username = (await client1.get_entity(user_id)).username
             await client1.send_message(user_id, f'''
@@ -173,6 +174,7 @@ async def send_mess(chat_id, msg, file):
 @client1.on(events.NewMessage())
 async def user_add1(event):
     global DB_DICT
+    print(176, DB_DICT)
     if type(event.original_update.message.peer_id) == PeerUser:
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
@@ -187,7 +189,7 @@ async def user_add1(event):
 
                 DB_DICT[user_id]['Token'] =  event.original_update.message.message                
                 await client1.send_message(user_id, f'Please enter the contract address for your token.')
-                print(DB_DICT)             
+                print(191, DB_DICT)             
                 DB_DICT[user_id]['Stage'] = 35
             elif DB_DICT[user_id]['Stage'] == 35 and '/add_adv' not in event.original_update.message.message  :
                 DB_DICT[user_id]['Token address'] =  event.original_update.message.message                
