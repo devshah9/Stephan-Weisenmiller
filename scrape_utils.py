@@ -39,9 +39,9 @@ def scrape_function_bsc(token):
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
         options.add_argument('--disable-gpu')
-        driver = uc.Chrome(options=options, use_subprocess=True)
+        driver = uc.Chrome(options=options, use_subprocess=True, version_main=104)
     else:
-        driver = uc.Chrome(use_subprocess=True)
+        driver = uc.Chrome(use_subprocess=True,  version_main=104)
     wait = WebDriverWait(driver, 10)
     page_no = 1
     running = True
@@ -98,9 +98,9 @@ def scrape_function_eth(token):
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
         options.add_argument('--disable-gpu')
-        driver = uc.Chrome(options=options, use_subprocess=True)
+        driver = uc.Chrome(options=options, use_subprocess=True,  version_main=104)
     else:
-        driver = uc.Chrome(use_subprocess=True)
+        driver = uc.Chrome(use_subprocess=True, version_main=104)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     url = f'https://etherscan.io/dex?q={token}#transactions'

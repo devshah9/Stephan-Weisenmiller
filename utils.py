@@ -29,9 +29,9 @@ def checkBSC(token):
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
         options.add_argument('--disable-gpu')
-        driver = uc.Chrome(options=options, use_subprocess=True)
+        driver = uc.Chrome(options=options, use_subprocess=True, version_main=104)
     else:
-        driver = uc.Chrome(use_subprocess=True)
+        driver = uc.Chrome(use_subprocess=True, version_main=104)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     driver.get(f'https://bscscan.com/dextracker?q={token}')
@@ -52,9 +52,9 @@ def checkETH(token):
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox") 
         options.add_argument('--disable-gpu')
-        driver = uc.Chrome(options=options, use_subprocess=True)
+        driver = uc.Chrome(options=options, use_subprocess=True, version_main=104)
     else:
-        driver = uc.Chrome(use_subprocess=True)
+        driver = uc.Chrome(use_subprocess=True, version_main=104)
     # creating waiting element
     wait = WebDriverWait(driver, 10)
     url = f'https://etherscan.io/token/{token}#tokenTrade'
@@ -66,3 +66,4 @@ def checkETH(token):
         driver.quit()
         return False
      
+#print(checkETH('0xCF3461A7e516A5cBDcd7d80BeBD38Af0E3af3883'))
