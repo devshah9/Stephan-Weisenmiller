@@ -79,12 +79,14 @@ async def user_add1(event):
     global DB_DICT
     user_id = event.original_update.message.peer_id.user_id
     if user_id in DB_DICT:
-        DB_DICT[user_id] = {}
+        del DB_DICT[user_id]
+        await client1.send_message(user_id, 'you contest has been canceled')
 
 
 @client1.on(events.NewMessage(pattern='/start'))
 async def user_add1(event):
     global DB_DICT
+    print(event)
     if type(event.original_update.message.peer_id) == PeerUser:# 
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
