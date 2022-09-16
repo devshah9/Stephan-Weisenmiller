@@ -89,8 +89,8 @@ async def user_add1(event):
     if type(event.original_update.message.peer_id) == PeerUser:# 
         user_id = event.original_update.message.peer_id.user_id
         if user_id in DB_DICT:
-            if DB_DICT[user_id]['Stage'] != 1: 
-                DB_DICT[user_id] = {}
+            # if DB_DICT[user_id]['Stage'] != 1: 
+            #     DB_DICT[user_id] = {}
             keyboard = [
                 [Button.inline("BSC", b"21")],
                 [Button.inline("ETH", b"22")]
