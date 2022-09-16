@@ -498,16 +498,12 @@ __ 🎉 Contest Winner!! 🎉__
 
 Winner:
 **Amount Spent:** __{} {}__ (${}) 
-    **Amount Spent:** __{} {}__ (${}) 
-**Amount Spent:** __{} {}__ (${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:**: __{}__
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
-    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
@@ -529,14 +525,10 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT
                         not_new_buyed_min = 0
                         final_dict['Time'] = inital_time
                         msg = """  
-                            msg = """  
-                        msg = """  
 **{} Biggest Buy Contest Tracker**
 
 __💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥__
 
-New Biggest Buy: 
-    New Biggest Buy: 
 New Biggest Buy: 
 **Amount Spent:** {} {} (${})
 **TX Hash:** [{}..{}]({})
@@ -575,8 +567,6 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 __ 🎉 Contest Winner!! 🎉__
 
 Winner: 
-    Winner: 
-Winner: 
 **Amount Spent:** __{} {}__ (${})
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
@@ -584,8 +574,6 @@ Winner:
 
 __Contact your project’s owner for payout details.__
 
-__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
-    __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Prize']) 
                 await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
 
