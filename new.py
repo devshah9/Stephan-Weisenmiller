@@ -503,7 +503,7 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                     not_new_buyed_min = 0
-                await asyncio.sleep(33)
+                await asyncio.sleep(47)
                 final_dict['Time'] = int(final_dict['Time']) - 1
             else:
                 msg = """
@@ -585,7 +585,7 @@ __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
                     not_new_buyed_min = 0
-                await asyncio.sleep(33)
+                await asyncio.sleep(47)
             else:
                 # Add the logic that dont throw error if there is no new buy 
                 #  Rn it showing error because of newbuy
