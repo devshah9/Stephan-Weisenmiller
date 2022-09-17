@@ -339,8 +339,9 @@ If not, type " /start " to reset everything.
 
 __Thank you for using @BuddhaBuyContestBot__
 ''')
+                    DB_DICT[user_id]['Stage'] = 7
                     await asyncio.sleep(120)
-                    if DB_DICT[user_id]['Stage'] == 6:
+                    if DB_DICT[user_id]['Stage'] == 7:
                         await find_big_buy(DB_DICT[user_id])
 
 
