@@ -284,7 +284,7 @@ Current Biggest Buy:
 **Amount Spent:** __20 {}__ ($561.65) 
 **Tx Hash:** [0X865...654163]({})
 **Contest Time Remaining:** 30 Minutes Left
-**Prize:**: {}
+**Prize:** {}
 
 __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], UNIT, URL_LINK, DB_DICT[user_id]['Prize'])
                         await send_mess(user_id, msg, DB_DICT[user_id]['path'])
@@ -325,7 +325,7 @@ Winner:
 **Amount Spent:** __20 {}__ ($54.56)
 **Tx Hash:** [0x5461...4561]({})
 **Contest Time Remaining:** __0 Minutes Left__
-**Prize:**: __{}__
+**Prize:** __{}__
 
 __Contact your project’s owner for payout details.__
 
@@ -478,13 +478,27 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT
                 else:
                     not_new_buyed_min +=1
                 if not_new_buyed_min ==5 and final_dict['Time']!= 0:
-                    msg = """
+                    if OLD_BUY:
+                        msg = """
+**{} Biggest Buy Contest Tracker**
+
+__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+
+__Current Biggest Buy:__
+**Amount Spent:** __{} {}__ (${}) 
+**Tx Hash:** [{}...{}]({})
+**Contest Time Remaining:** {} Minutes Left
+**Prize:** {}
+
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+                    else:
+                        msg = """
 **{} Biggest Buy Contest Tracker**
 
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 **Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
+**Prize:** {}
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
@@ -501,7 +515,7 @@ Winner:
 **Amount Spent:** __{} {}__ (${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
-**Prize:**: __{}__
+**Prize:** __{}__
 
 __Contact your project’s owner for payout details.__
 
@@ -546,13 +560,27 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT
                     final_dict['Time'] = int(final_dict['Time']) - 1
                     not_new_buyed_min += 1
                 if not_new_buyed_min ==5 and final_dict['Time']!= 0:
-                    msg = """
+                    if OLD_BUY:
+                        msg = """
+**{} Biggest Buy Contest Tracker**
+
+__📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
+
+__Current Biggest Buy:__
+**Amount Spent:** __{} {}__ (${}) 
+**Tx Hash:** [{}...{}]({})
+**Contest Time Remaining:** {} Minutes Left
+**Prize:** {}
+
+__Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT, in_dollar_old, OLD_TRX_HASH_LINK.split('/')[-1][0:3], OLD_TRX_HASH_LINK.split('/')[-1][-4:-1], OLD_TRX_HASH_LINK, final_dict['Time'], final_dict['Prize'])
+                    else:
+                        msg = """
 **{} Biggest Buy Contest Tracker**
 
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 **Contest Time Remaining:** {} Minutes Left
-**Prize:**: {}
+**Prize:** {}
 
 __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
                     await send_mess(final_dict['chat_entity'], msg, final_dict['path'])
@@ -571,7 +599,7 @@ Winner:
 **Amount Spent:** __{} {}__ (${})
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
-**Prize:**: __{}__
+**Prize:** __{}__
 
 __Contact your project’s owner for payout details.__
 
