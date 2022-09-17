@@ -252,7 +252,7 @@ Timer Reset - The timer will reset every time a new big buy is found.
                     await client1.send_message(user_id, 'Please Type a number with **M** and **H** for minutes and hours. \n Example : \n\n  **10 M** for 10 minutes \n\n  **2 H** for 2 hour')
             elif DB_DICT[user_id]['Stage'] == 6 and '/add_adv' not in event.original_update.message.message  :
                     DB_DICT[user_id]['Prize'] = event.original_update.message.message
-                    
+
                     await client1.send_message(user_id, '''
 Here are examples of how the posts will look in chat 👇👇
 ''')
@@ -281,7 +281,7 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], DB_DICT
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 Current Biggest Buy: 
-**Amount Spent:** __20 {}__ ($561.65) 
+**Amount Spent:** __20 {}__ (~$561.65) 
 **Tx Hash:** [0X865...654163]({})
 **Contest Time Remaining:** 30 Minutes Left
 **Prize:** {}
@@ -308,7 +308,7 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], DB_DICT
 `💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
 
 New Biggest Buy:
-**Amount Spent:** __20 {}__ ($456.54)
+**Amount Spent:** __20 {}__ (~$456.54)
 **TX Hash:** [0x465..54511]({})
 **Contest Time Remaining:** __30 Minutes Left__
 **Prize:** __{}__
@@ -322,7 +322,7 @@ __Bot powered by @BuddhaCoinCares__""".format(DB_DICT[user_id]['Token'], UNIT, U
 __ 🎉 Contest Winner!! 🎉__
 
 Winner: 
-**Amount Spent:** __20 {}__ ($54.56)
+**Amount Spent:** __20 {}__ (~$54.56)
 **Tx Hash:** [0x5461...4561]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:** __{}__
@@ -466,7 +466,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 `💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥`
 
 New Biggest Buy:
-**Amount Spent:** __{} {}__ (${})
+**Amount Spent:** __{} {}__ (~${})
 **TX Hash:** [{}..{}]({})
 **Contest Time Remaining:** __{} Minutes Left__
 **Prize:** __{}__
@@ -485,7 +485,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 __Current Biggest Buy:__
-**Amount Spent:** __{} {}__ (${}) 
+**Amount Spent:** __{} {}__ (~${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** {} Minutes Left
 **Prize:** {}
@@ -512,7 +512,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 __ 🎉 Contest Winner!! 🎉__
 
 Winner:
-**Amount Spent:** __{} {}__ (${}) 
+**Amount Spent:** __{} {}__ (~${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:** __{}__
@@ -545,7 +545,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], OLD_BUY, UNIT
 __💥 A NEW BIGGEST BUY HAS BEEN FOUND 💥__
 
 New Biggest Buy: 
-**Amount Spent:** {} {} (${})
+**Amount Spent:** {} {} (~${})
 **TX Hash:** [{}..{}]({})
 **Contest Time Remaining:** {} Minutes Left
 **Prize:** {}
@@ -567,7 +567,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], NEW_BUY, UNIT
 __📣 Reminder, there is an ongoing Biggest Buy Contest! 📣__
 
 __Current Biggest Buy:__
-**Amount Spent:** __{} {}__ (${}) 
+**Amount Spent:** __{} {}__ (~${}) 
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** {} Minutes Left
 **Prize:** {}
@@ -596,7 +596,7 @@ __Bot powered by @BuddhaCoinCares__""".format(final_dict['Token'], final_dict['T
 __ 🎉 Contest Winner!! 🎉__
 
 Winner: 
-**Amount Spent:** __{} {}__ (${})
+**Amount Spent:** __{} {}__ (~${})
 **Tx Hash:** [{}...{}]({})
 **Contest Time Remaining:** __0 Minutes Left__
 **Prize:** __{}__
