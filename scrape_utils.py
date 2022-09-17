@@ -58,7 +58,7 @@ def scrape_function_bsc(token):
         for i in full_text_table:
             each_row = i.text.replace('\n', ' ')
             each_row = each_row.split(' ')
-            if (each_row[2] == 'secs') or (int(each_row[1]) <= 10 and (each_row[2] == 'min' or each_row[2] == 'mins')): 
+            if (each_row[2] == 'secs') or (int(each_row[1]) <= 1 and (each_row[2] == 'min' or each_row[2] == 'mins')): 
                 min_filter += 1
                 if BIG_BUY < float(each_row[4].replace(',', '')) and (each_row[5] == 'WBNB'):
                     BIG_BUY = float(each_row[4].replace(',', ''))
