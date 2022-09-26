@@ -6,7 +6,7 @@ from multiprocessing import Pool
 
 import telebot
 
-bot = telebot.TeleBot("5781829484:AAE_S1ROChx2pQK5cnX8MwPEFb9O9-I43LM")#,parse_mode='markdown')
+bot = telebot.TeleBot("5781829484:AAE_S1ROChx2pQK5cnX8MwPEFb9O9-I43LM",parse_mode='markdown')
 
 	
 from apscheduler.schedulers.background import BackgroundScheduler
