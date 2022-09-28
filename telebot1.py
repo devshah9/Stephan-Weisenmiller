@@ -32,15 +32,26 @@ def background_fuction():
 	global DB_DICT
 	print(32, DB_DICT)
 	for i in DB_DICT:
-		if DB_DICT[i]['running'] == False and DB_DICT[i]['Stage'] == 7:
-			find_big_buy(DB_DICT[i])
+		if type(i) == int:
+			if DB_DICT[i]['running'] == False and DB_DICT[i]['Stage'] == 7:
+				find_big_buy(DB_DICT[i])
 
 
 sched.add_job(background_fuction, 'interval',seconds=10,max_instances=100)
 
 sched.start()
 def send_mess(chat_id, msg, file):
-	bot.send_message(chat_id, msg, disable_web_page_preview=True)
+	global DB_DICT
+	link_preview = True
+	if "Adv" in DB_DICT:
+		msg = msg + """
+—————————————
+`{}`""".format(DB_DICT['Adv'])
+	if "Adv_path" in DB_DICT:
+		msg = str(msg).replace(':', f'[:]({DB_DICT["Adv_path"]})', 1)
+		link_preview = False
+	print(52, DB_DICT, link_preview)
+	bot.send_message(chat_id, msg, disable_web_page_preview=link_preview)
 
 
 @bot.message_handler(regexp="/activate@buddha", chat_types=['group', 'supergroup'])
@@ -59,20 +70,20 @@ def activate_buddha(event):
 		DB_DICT[from_user_id]['Stage'] = 1
 		DB_DICT[from_user_id]['path'] = None
 		DB_DICT[from_user_id]['running'] = False
+		DB_DICT[from_user_id]['canceled'] = False
 	bot.reply_to(event,  f'''
 Thank you for using BuddhaBuyContestBot! 
 
 To activate your contest, an admin must click this link & chat with the bot here >>[@BuddhaBuyContestBot](https://t.me/BuddhaBuyContestBot?start=captcha)
 ''', parse_mode = 'Markdown')
 
-
-# @client1.on(events.NewMessage(pattern='/cancel'))
-# async def user_add1(event):
-#     global DB_DICT
-#     user_id = event.original_update.message.peer_id.user_id
-#     if user_id in DB_DICT:
-#         del DB_DICT[user_id]
-#         await client1.send_message(user_id, 'you contest has been canceled')
+@bot.message_handler(regexp="/cancel@buddhaa", chat_types=['group', 'supergroup'])
+def canceled_contest(event):
+	global DB_DICT
+	print(event.from_user.id, event.chat.id)
+	for i in DB_DICT:
+		if type(i) == int and i ==event.from_user.id and DB_DICT[i]['Group ID'] == event.chat.id:
+			DB_DICT[i]['canceled'] = True
 
 
 
@@ -134,8 +145,7 @@ def add_adv_command(event):
 		if username == 'Devshah9' or username == 'CapoTheDev':
 			if text.startswith('/add_adv '):
 				DB_DICT['Adv'] = text.split('/add_adv ')[-1]
-				print(DB_DICT['Adv'])
-			if text.startswith('/remove_adv '):
+			if text.startswith('/remove_adv'):
 				del DB_DICT['Adv']
 			if text.startswith('/remove_link'):
 				del DB_DICT['Adv_path']
@@ -372,8 +382,7 @@ _Details:_
 
 _Bot powered by @BuddhaCoinCares_""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
 	send_mess(final_dict['Group ID'], msg, final_dict['path'])
-	time.sleep(60)
-	while True:
+	while not final_dict['canceled']:
 		contest_start = time.time()
 		print(443, final_dict, DB_DICT)
 
@@ -434,10 +443,11 @@ _📣 Reminder, there is an ongoing Biggest Buy Contest! 📣_
 *Prize:* {}
 
 _Bot powered by @BuddhaCoinCares_""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
+					print(449, msg)
 					send_mess(final_dict['Group ID'], msg, final_dict['path'])
 					not_new_buyed_min = 0.
 				print(426, time.time(), contest_start, (time.time() - contest_start) < 60)
-				while (time.time() - contest_start) < 60:
+				while (time.time() - contest_start) < 59:
 					time.sleep(1)
 					print(time.time() , contest_start)
 				final_dict['Time'] = int(final_dict['Time']) - 1
@@ -521,7 +531,7 @@ _📣 Reminder, there is an ongoing Biggest Buy Contest! 📣_
 _Bot powered by @BuddhaCoinCares_""".format(final_dict['Token'], final_dict['Time'], final_dict['Prize'])
 					send_mess(final_dict['Group ID'], msg, final_dict['path'])
 					not_new_buyed_min = 0
-				while time.time() - contest_start < 60:
+				while time.time() - contest_start < 59:
 					time.sleep(1)
 			else:
 				# TODO
