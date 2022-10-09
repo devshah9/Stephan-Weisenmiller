@@ -126,7 +126,7 @@ I’m only in my Beta mode, so I currently only offer a _Biggest Buy Contest, fe
 To use me for your contest, just follow these 4 simple steps\. 
 
 1️⃣ Add @BuddhaBuyContestBot to your group\.
-2️⃣ Type /activate@BuddhaBuyContestBot
+2️⃣ Type /activate@buddha
 3️⃣ Click the link to come back here to set up your contest\.
 4️⃣ Start your Contest\! 🎉
 
@@ -356,7 +356,7 @@ def find_big_buy(final_dict):
 	OLD_BUY, in_dollar_old, not_new_buyed_min = 0, 0, 0
 	UNIT = None
 	inital_time = int(final_dict['Time'])
-
+	time.sleep(110)
 	if final_dict['Mode'] == "Straight time":
 		msg = """
 *{} Biggest Buy Contest Tracker*
